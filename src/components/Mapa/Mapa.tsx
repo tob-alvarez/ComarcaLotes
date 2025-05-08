@@ -6,7 +6,6 @@ import {
     Polygon,
 } from "@react-google-maps/api";
 import { useState } from "react";
-import lotes from "@/data/lotes.json";
 import Modal from "@/components/common/Modal/Modal"; // ajustá la ruta si está en otro lugar
 
 const containerStyle = {
@@ -19,12 +18,11 @@ const center = {
     lng: -65.17250695415372,
 };
 
-type Lote = {
-    id: string;
-    estado: string;
-    dimensiones: string;
-    coordenadas: { lat: number; lng: number }[];
-};
+import rawLotes from "@/data/lotes.json";
+import { Lote } from "@/types/lote";
+
+const lotes: Lote[] = rawLotes as Lote[];
+
 
 export default function Mapa() {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
