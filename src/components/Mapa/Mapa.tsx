@@ -5,7 +5,9 @@ import {
     LoadScript,
     Polygon,
 } from "@react-google-maps/api";
+import { useState } from "react";
 import lotes from "@/data/lotes.json";
+import Modal from "@/components/common/Modal/Modal"; // ajustá la ruta si está en otro lugar
 
 const containerStyle = {
     width: "100%",
@@ -17,14 +19,20 @@ const center = {
     lng: -65.17250695415372,
 };
 
+type Lote = {
+    id: string;
+    estado: string;
+    dimensiones: string;
+    coordenadas: { lat: number; lng: number }[];
+};
 
 export default function Mapa() {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const [loteSeleccionado, setLoteSeleccionado] = useState<Lote | null>(null);
 
     return (
         <div className="flex flex-col items-center py-6 gap-4">
-
-            <div className="w-[80%] h-[70dvh] border rounded-xl shadow-lg overflow-hidden">
+            <div className="w-[80%] h-[70dvh] border rounded-xl shadow-lg overflow-hidden relative">
                 <LoadScript googleMapsApiKey={apiKey ?? ""}>
                     <GoogleMap
                         mapContainerStyle={containerStyle}
@@ -46,13 +54,16 @@ export default function Mapa() {
                                     strokeColor: "#000",
                                     strokeOpacity: 1,
                                     strokeWeight: 1.5,
+                                    clickable: true,
                                 }}
-                                onClick={() => alert(`Lote ${lote.id}: ${lote.estado} - ${lote.dimensiones}`)}
+                                onClick={() => setLoteSeleccionado(lote)}
                             />
                         ))}
-
                     </GoogleMap>
                 </LoadScript>
+                {loteSeleccionado && (
+                    <Modal lote={loteSeleccionado} onClose={() => setLoteSeleccionado(null)} />
+                )}
             </div>
         </div>
     );
